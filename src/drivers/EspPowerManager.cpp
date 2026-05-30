@@ -22,7 +22,9 @@ void EspPowerManager::enterDeepSleep(const hal::WakeSources& sources) {
         esp_sleep_enable_ext0_wakeup(static_cast<gpio_num_t>(pins::kRtcInt), 0);
     }
     if (sources.userInput) {
-        // Buttons/encoder push are active-low (INPUT_PULLUP) -> wake on ALL_LOW.
+        // kExt1WakeMask is a SINGLE active-low pin (the encoder push), so ALL_LOW
+        // wakes correctly on that one press. See Pins.h for why a multi-pin
+        // active-low mask cannot work with ext1 on the classic ESP32.
         esp_sleep_enable_ext1_wakeup(pins::kExt1WakeMask, ESP_EXT1_WAKEUP_ALL_LOW);
     }
     esp_deep_sleep_start(); // does not return

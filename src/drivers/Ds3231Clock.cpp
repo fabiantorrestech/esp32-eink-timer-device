@@ -6,9 +6,6 @@
 
 namespace drivers {
 
-// RTClib's DateTime(uint32_t) counts seconds from 2000; we expose Unix epoch.
-static constexpr uint32_t kSecondsFrom1970To2000 = 946684800UL;
-
 void Ds3231Clock::begin() {
     Wire.begin(pins::kI2cSda, pins::kI2cScl);
     ok_ = rtc_.begin(&Wire);
@@ -28,7 +25,9 @@ uint32_t Ds3231Clock::now() const {
 
 void Ds3231Clock::setTime(uint32_t epochSeconds) {
     if (!ok_) return;
-    rtc_.adjust(DateTime(static_cast<uint32_t>(epochSeconds - kSecondsFrom1970To2000)));
+    // RTClib's DateTime(uint32_t) already takes a Unix epoch (it is the
+    // counterpart to now().unixtime()), so pass the value straight through.
+    rtc_.adjust(DateTime(epochSeconds));
 }
 
 void Ds3231Clock::setAlarm(domain::Duration fromNow) {

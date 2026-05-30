@@ -50,9 +50,14 @@ inline constexpr uint8_t kLedStripData = 13; // -> SN74AHCT125N -> 5V WS2812 (fu
 // Battery sense MUST be on ADC1 (GPIO32-39) so it keeps working with WiFi on.
 inline constexpr uint8_t kBatterySenseAdc1 = 39;
 
-// Bitmask of RTC GPIOs allowed to wake the device via ext1 (buttons + encoder push).
-inline constexpr uint64_t kExt1WakeMask =
-    (1ULL << kEncoderSw) | (1ULL << kButtonStart) |
-    (1ULL << kButtonMenu) | (1ULL << kButtonBack);
+// Deep-sleep user-input wake (ext1). On the classic ESP32, ext1 can only wake on
+// "all masked pins low" (ESP_EXT1_WAKEUP_ALL_LOW) or "any masked pin high". Our
+// buttons are active-low (INPUT_PULLUP), so an ALL_LOW mask spanning several pins
+// would require pressing every button at once. We therefore designate a SINGLE
+// wake control -- the encoder push -- so one press reliably wakes the device.
+//
+// To instead wake on ANY of several buttons, wire those buttons active-high (with
+// external pull-downs) and use ESP_EXT1_WAKEUP_ANY_HIGH with their combined mask.
+inline constexpr uint64_t kExt1WakeMask = (1ULL << kEncoderSw);
 
 } // namespace pins
