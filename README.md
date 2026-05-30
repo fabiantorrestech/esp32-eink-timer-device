@@ -1,5 +1,7 @@
 # ESP32 E-Paper Visual Timer
 
+[![CI](https://github.com/fabiantorrestech/esp32-eink-timer-device/actions/workflows/ci.yml/badge.svg)](https://github.com/fabiantorrestech/esp32-eink-timer-device/actions/workflows/ci.yml)
+
 A physical **visual timer** (Time Timer–style shrinking arc/bar) built on an
 ESP32-WROOM-32 driving a Waveshare 4.2" 400×300 e-paper display. It is the
 embedded sibling of the *visualtimer* Android app.
